@@ -4,10 +4,10 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import com.expensetracker.backend.entities.Expense;
-import com.expensetracker.backend.entities.User;
+import com.expensetracker.backend.entities.AppUser;
 import com.expensetracker.backend.exception.ResourceNotFoundException;
 import com.expensetracker.backend.repositories.ExpenseRepository;
-import com.expensetracker.backend.repositories.UserRepository;
+import com.expensetracker.backend.repositories.AppUserRepository;
 
 
 
@@ -17,11 +17,11 @@ import com.expensetracker.backend.repositories.UserRepository;
 @Service
 public class ExpenseService {
     private final ExpenseRepository expenseRepository;
-    private final UserRepository userRepository;
+    private final AppUserRepository appUserRepository;
     
-    public ExpenseService(ExpenseRepository expenseRepository, UserRepository userRepository) {
+    public ExpenseService(ExpenseRepository expenseRepository, AppUserRepository appUserRepository) {
         this.expenseRepository = expenseRepository;
-        this.userRepository = userRepository;
+        this.appUserRepository = appUserRepository;
     }
 
     //Methode zum Abrufen aller Ausgaben
@@ -35,10 +35,10 @@ public class ExpenseService {
         // Setze den User, falls nur die ID vorhanden ist
         if (expense.getUser() != null && expense.getUser().getId() != null) {
             Long userId = expense.getUser().getId();
-            User user = userRepository.findById(userId)
+            AppUser appUser = appUserRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                     "Benutzer nicht gefunden mit der ID: " + userId));
-            expense.setUser(user);
+            expense.setUser(appUser);
         }
         return expenseRepository.save(expense);
     }
@@ -61,10 +61,10 @@ public class ExpenseService {
         // Aktualisiere User, falls vorhanden
         if (updatedExpense.getUser() != null && updatedExpense.getUser().getId() != null) {
             Long userId = updatedExpense.getUser().getId();
-            User user = userRepository.findById(userId)
+            AppUser appUser = appUserRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                     "Benutzer nicht gefunden mit der ID: " + userId));
-            existingExpense.setUser(user);
+            existingExpense.setUser(appUser);
         }
 
         // Speichern und zurückgeben

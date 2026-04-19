@@ -3,6 +3,8 @@ package com.expensetracker.backend.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.expensetracker.backend.entities.AppUser;
+import com.expensetracker.backend.services.AppUserService;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,9 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.expensetracker.backend.dto.UserDto;
-import com.expensetracker.backend.entities.User;
 import com.expensetracker.backend.mapper.UserMapper;
-import com.expensetracker.backend.services.UserService;
+
 
 @RestController
 @Validated
@@ -25,10 +26,10 @@ import com.expensetracker.backend.services.UserService;
 public class UserController {
 
     //Abhängigkeit zu UserService und UserMapper
-    private final UserService userService;
+    private final AppUserService userService;
     private final UserMapper userMapper;
     
-    public UserController(UserService userService, UserMapper userMapper) {
+    public UserController(AppUserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
     }
@@ -48,8 +49,8 @@ public class UserController {
     @PostMapping
     @SuppressWarnings("null")
     public UserDto createUser(@RequestBody @Validated @NonNull UserDto userDto) {
-        User user = userMapper.toEntity(userDto);
-        return userMapper.toDto(userService.createUser(user));
+        AppUser appUser = userMapper.toEntity(userDto);
+        return userMapper.toDto(userService.createUser(appUser));
     }
     //Löschen eines Benutzers
     @DeleteMapping("/{id}")
@@ -60,8 +61,8 @@ public class UserController {
     @PatchMapping("/{id}")
     @SuppressWarnings("null")
     public UserDto updateUser(@PathVariable @NonNull Long id, @RequestBody @Validated @NonNull UserDto userDto) {
-        User user = userMapper.toEntity(userDto);
-        return userMapper.toDto(userService.updateUser(id, user));
+        AppUser appUser = userMapper.toEntity(userDto);
+        return userMapper.toDto(userService.updateUser(id, appUser));
     }
     
 

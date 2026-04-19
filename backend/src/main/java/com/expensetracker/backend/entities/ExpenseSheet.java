@@ -28,7 +28,7 @@ private double budget;
 private LocalDate monat;
 
 @ManyToOne
-private User user;
+private AppUser appUser;
 
 @OneToMany
 private List<Expense> expenses;
@@ -57,11 +57,11 @@ public void setMonat(LocalDate monat) {
     this.monat = monat;
 }
 
-public User getUser() {
-    return user;
+public AppUser getUser() {
+    return appUser;
 }
-public void setUser(User user) {
-    this.user = user;
+public void setUser(AppUser appUser) {
+    this.appUser = appUser;
 }
 
 public List<Expense> getExpenses() {

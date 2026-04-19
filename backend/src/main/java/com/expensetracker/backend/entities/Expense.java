@@ -19,19 +19,23 @@ public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank
     private String titel;
+
     @NotNull
     @DecimalMin("0.1")
     private Double betrag;
+
     @NotBlank
     private String kategorie;
+
     //Ausgabendatum
     @NotNull
     private LocalDate datum;
     
     @ManyToOne
-    private User user;
+    private AppUser appUser;
 
     // Getter und Setter
     public Long getId() {
@@ -67,12 +71,12 @@ public class Expense {
         this.datum = datum;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     

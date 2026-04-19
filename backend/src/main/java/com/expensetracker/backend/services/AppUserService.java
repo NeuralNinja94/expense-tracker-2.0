@@ -2,39 +2,41 @@ package com.expensetracker.backend.services;
 import java.util.List;
 
 import org.springframework.lang.NonNull;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.expensetracker.backend.entities.User;
-import com.expensetracker.backend.repositories.UserRepository;
-
-
-
-
-
+import com.expensetracker.backend.entities.AppUser;
+import com.expensetracker.backend.repositories.AppUserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-public class UserService {
+@Transactional
+public class AppUserService {
 
-    // Methoden zum Verwalten von Benutzern (CRUD-Operationen) können hier hinzugefügt werden
-    private final UserRepository userRepository;
-    //Konstruktor
-    public UserService(UserRepository userRepository) {
+//Dependencies via Constructor Injection
+    private final AppUserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public AppUserService(AppUserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
+
     //Alle Benutzer abrufen
-    public List<User> getAllUsers() {
+    public List<AppUser> getAllUsers() {
         return userRepository.findAll();
     }
     //Benutzer nach ID abrufen
-    public User getUserById(@NonNull Long id) {
+    public AppUser getUserById(@NonNull Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Benutzer nicht gefunden mit der ID: " + id));
     }
     //Neuen Benutzer erstellen
-    public User createUser(@NonNull User user) {
-        return userRepository.save(user);
+    public AppUser createUser(@NonNull AppUser appUser) {
+        return userRepository.save(appUser);
     }
+
     //Benutzer löschen
     public void deleteUser(@NonNull Long id) {
         userRepository.deleteById(id);
@@ -51,16 +53,18 @@ public class UserService {
     }
     
     //Benutzer aktualisieren
-    public User updateUser(@NonNull Long id, @NonNull User updatedUser) {
-        User existingUser = userRepository.findById(id)
+    public AppUser updateUser(@NonNull Long id, @NonNull AppUser updatedAppUser) {
+        AppUser existingAppUser = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Benutzer nicht gefunden mit der ID: " + id));
 
-        existingUser.setBenutzername(updatedUser.getBenutzername());
-        existingUser.setPasswort(updatedUser.getPasswort());
+        existingAppUser.setBenutzername(updatedAppUser.getBenutzername());
+        existingAppUser.setPasswort(updatedAppUser.getPasswort());
         
 
-        return userRepository.save(existingUser);
+        return userRepository.save(existingAppUser);
     }
+    //Passwort hashing
+
 
     
 
