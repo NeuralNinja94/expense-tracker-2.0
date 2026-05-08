@@ -1,0 +1,5 @@
+spring.datasource.url=jdbc:postgresql://localhost:5432/expense_tracker
+spring.datasource.username=postgres
+spring.datasource.password=HIER_EIGENES_PASSWORT_EINTRAGEN
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true

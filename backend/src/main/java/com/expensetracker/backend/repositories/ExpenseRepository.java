@@ -1,5 +1,6 @@
 package com.expensetracker.backend.repositories;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,7 +26,9 @@ public interface  ExpenseRepository extends JpaRepository<Expense, Long> {
    // Zeigt eine bestimmte Ausgabe eines bestimmten Users an
    List<Expense> findByIdAndAppUserId(Long id, Long userId);
 
+   Expense findTopByAppUser_IdOrderByBetragDesc(Long userId);
+   Expense findTopByAppUser_IdOrderByBetragAsc(Long userId);
 
 
-    
+
 }

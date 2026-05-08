@@ -1,5 +1,6 @@
 package com.expensetracker.backend.services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
@@ -9,12 +10,11 @@ import com.expensetracker.backend.exception.ResourceNotFoundException;
 import com.expensetracker.backend.repositories.ExpenseRepository;
 import com.expensetracker.backend.repositories.AppUserRepository;
 
-
-
-
+import java.time.LocalDate;
 
 
 @Service
+@Transactional
 public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final AppUserRepository appUserRepository;
@@ -81,8 +81,34 @@ public class ExpenseService {
         expenseRepository.deleteById(expenseId);
     }
 
-    
+    //Gesamtausgaben berechnung
+    public Double calculateTotalExpense(Long userId){
+        return null;
+    }
 
-    
-}
+    //Nach Kategorien summieren
+    public Double calculateTotalByKategorieAndUser(String kategorie, Long userId){
+        return null;
+    }
+    //Nach Monat Summieren
+    public Double calculateMonthlyTotalByUser(Long userId, int year, int month){
+        return null;
+    }
+    //nach Zeitraum summieren
+    public Double calculateTotalBetweenDatesByUser(Long userId, LocalDate start, LocalDate end){
+        return null;
+    }
+    //Höchste Ausgabe eines Users
+    public Expense findTopByAppUser_IdOrderByBetragDesc(Long userId){
+        return null;
+    }
+    //Niedrigste Ausgabe eines Users
+    public Expense findTopByAppUser_IdOrderByBetragAsc(Long userId){
+        return null;
+    }
+    }
+
+
+
+
     
