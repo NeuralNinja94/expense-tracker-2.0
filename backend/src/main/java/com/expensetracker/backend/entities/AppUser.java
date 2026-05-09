@@ -32,6 +32,9 @@ public class AppUser implements UserDetails {
     @Column(nullable = false)
     private String passwort;
 
+    @OneToMany(mappedBy = "appUser")
+    private List<Expense> expenses;
+
     private LocalDate erstellungsdatum;
 
     @Enumerated(EnumType.STRING)

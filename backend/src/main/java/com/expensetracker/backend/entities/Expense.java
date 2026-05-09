@@ -2,11 +2,7 @@ package com.expensetracker.backend.entities;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -35,6 +31,7 @@ public class Expense {
     private LocalDate datum;
     
     @ManyToOne
+    @JoinColumn(name = "app_user_id")
     private AppUser appUser;
 
     // Getter und Setter
