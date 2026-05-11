@@ -11,6 +11,10 @@ import com.expensetracker.backend.repositories.ExpenseRepository;
 import com.expensetracker.backend.repositories.AppUserRepository;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import static java.lang.Long.sum;
 
 
 @Service
@@ -82,29 +86,51 @@ public class ExpenseService {
     }
 
     //Gesamtausgaben berechnung
-    public Double calculateTotalExpense(Long userId){
-        return null;
+    public Double calculateTotalExpenses(Long userId) {
+        List<Expense> expenses = expenseRepository.findByAppUser_Id(userId);
+
+        return expenses.stream()
+                .mapToDouble(Expense::getBetrag)
+                .sum();
     }
 
     //Nach Kategorien summieren
     public Double calculateTotalByKategorieAndUser(String kategorie, Long userId){
-        return null;
+        List<Expense> expenses = expenseRepository.findByAppUser_IdAndKategorie(userId, kategorie);
+
+        return expenses.stream()
+                .mapToDouble(Expense::getBetrag)
+                .sum();
     }
+
     //Nach Monat Summieren
-    public Double calculateMonthlyTotalByUser(Long userId, int year, int month){
-        return null;
+    public Double calculateMonthlyTotalByUser(Long userId, int year, int month) {
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+
+        List<Expense> expenses = expenseRepository.findByAppUser_IdAndDatumBetween(userId, start, end);
+
+        return expenses.stream()
+                .mapToDouble(Expense::getBetrag)
+                .sum();
     }
     //nach Zeitraum summieren
     public Double calculateTotalBetweenDatesByUser(Long userId, LocalDate start, LocalDate end){
-        return null;
+        List<Expense> expenses = expenseRepository.findByAppUser_IdAndDatumBetween(userId,start,end);
+
+        return expenses.stream()
+                .mapToDouble(Expense::getBetrag)
+                .sum();
     }
     //Höchste Ausgabe eines Users
-    public Expense findTopByAppUser_IdOrderByBetragDesc(Long userId){
-        return null;
+    public Optional<Expense> findHighestExpense(Long userId){
+        return expenseRepository.findTopByAppUser_IdOrderByBetragDesc(userId);
+
     }
     //Niedrigste Ausgabe eines Users
-    public Expense findTopByAppUser_IdOrderByBetragAsc(Long userId){
-        return null;
+    public Optional <Expense> findLowestExpense(Long userId){
+        return expenseRepository.findTopByAppUser_IdOrderByBetragAsc(userId);
+
     }
     }
 
