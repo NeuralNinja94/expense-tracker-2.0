@@ -123,13 +123,15 @@ public class ExpenseService {
                 .sum();
     }
     //Höchste Ausgabe eines Users
-    public Optional<Expense> findHighestExpense(Long userId){
-        return expenseRepository.findTopByAppUser_IdOrderByBetragDesc(userId);
+    public Expense findHighestExpense(Long userId){
+        return expenseRepository.findTopByAppUser_IdOrderByBetragDesc(userId)
+                .orElse(null);
 
     }
     //Niedrigste Ausgabe eines Users
-    public Optional <Expense> findLowestExpense(Long userId){
-        return expenseRepository.findTopByAppUser_IdOrderByBetragAsc(userId);
+    public Expense findLowestExpense(Long userId){
+        return expenseRepository.findTopByAppUser_IdOrderByBetragAsc(userId)
+                .orElse(null);
 
     }
     }

@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -58,7 +59,7 @@ public class ExpenseServiceTest {
         when(expenseRepository.findByAppUser_IdAndKategorie(1l, "Food"))
                 .thenReturn(mockExpenses);
 
-        double result = expenseService.calculateTotalByKategorieAndUser(1L, "Food");
+        double result = expenseService.calculateTotalByKategorieAndUser("Food", 1L);
 
         assertEquals(75.0, result);
     }
@@ -79,6 +80,46 @@ public class ExpenseServiceTest {
 
         assertEquals(50.0, result);
     }
+    //Test für Monats-Summe
+    @Test
+    void testCalculateMonthlyTotalByUser(){
+        List<Expense> mockExpenses = List.of(
+                createExpense(100.0),
+            createExpense(50.0)
+                        );
+        when(expenseRepository.findByAppUser_IdAndDatumBetween(
+                Mockito.eq(1L),
+                Mockito.eq(LocalDate.of(2024, 5, 1)),
+                Mockito.eq(LocalDate.of(2024, 5, 31))
+                )).thenReturn(mockExpenses);
 
+                double result = expenseService.calculateMonthlyTotalByUser(1L, 2024, 5);
+
+                assertEquals(150.0, result);
+    }
+    //Höchste Ausgabe
+    @Test
+    void testFindHighestExpense(){
+        Expense highest = createExpense(200.0);
+
+        when(expenseRepository.findTopByAppUser_IdOrderByBetragDesc(1L))
+                .thenReturn(Optional.of(highest));
+
+        Expense result = expenseService.findHighestExpense(1L);
+
+        assertEquals(200.0, result.getBetrag());
+    }
+//Tiefste Ausgabe
+    @Test
+    void testFindLowestExpense(){
+        Expense lowest = createExpense(5.0);
+
+        when(expenseRepository.findTopByAppUser_IdOrderByBetragAsc(1L))
+                .thenReturn(Optional.of(lowest));
+
+        Expense result = expenseService.findLowestExpense(1L);
+
+        assertEquals(5.0, result.getBetrag());
+    }
 
 }
