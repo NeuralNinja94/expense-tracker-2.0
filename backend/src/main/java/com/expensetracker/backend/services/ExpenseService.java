@@ -134,6 +134,18 @@ public class ExpenseService {
                 .orElse(null);
 
     }
+    public List<Expense> getExpensesByYear(Long userId, int year) {
+        LocalDate start = LocalDate.of(year, 1, 1);
+        LocalDate end = LocalDate.of(year, 12, 31);
+        return expenseRepository.findByAppUser_IdAndDatumBetween(userId, start, end);
+    }
+    public List<Expense> getExpensesByMonth(Long userId, int year, int month) {
+        LocalDate start = LocalDate.of(year, month, 1);
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+        return expenseRepository.findByAppUser_IdAndDatumBetween(userId, start, end);
+    }
+
+
     }
 
 
