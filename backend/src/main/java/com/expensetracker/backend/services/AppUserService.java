@@ -1,6 +1,9 @@
 package com.expensetracker.backend.services;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
+import com.expensetracker.backend.entities.Role;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.expensetracker.backend.entities.AppUser;
 import com.expensetracker.backend.repositories.AppUserRepository;
 import org.springframework.transaction.annotation.Transactional;
+
+
 
 
 @Service
@@ -23,6 +28,35 @@ public class AppUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    //Neuen User registrieren
+    public AppUser registerUser(String benutzername, String email,
+                                String rawPassword, Role role){
+
+        if (userRepository.existsByBenutzername(benutzername)) {
+            throw new IllegalArgumentException("Benutzername bereits vergeben");
+        }
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("Email bereits registriert");
+        }
+
+        if (benutzername == null || benutzername.isBlank()){
+            throw new IllegalArgumentException("Benutzername darf nicht leer sein!");
+        }
+        if (email == null || email.isBlank()){
+            throw new IllegalArgumentException("Email darf nicht leer sein!");
+        }
+        if (rawPassword == null || rawPassword.isBlank()){
+            throw new IllegalArgumentException("Password darf nicht leer sein!");
+        }
+
+        String hashed = passwordEncoder.encode(rawPassword);
+
+        Role effectiveRole = (role != null) ? role : Role.USER;
+        AppUser user = new AppUser(benutzername, email, hashed, effectiveRole);
+
+        return userRepository.save(user);
+    }
+
     //Alle Benutzer abrufen
     public List<AppUser> getAllUsers() {
         return userRepository.findAll();
@@ -32,9 +66,14 @@ public class AppUserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Benutzer nicht gefunden mit der ID: " + id));
     }
-    //Neuen Benutzer erstellen
-    public AppUser createUser(@NonNull AppUser appUser) {
-        return userRepository.save(appUser);
+
+    //Benutzer nach Email finden
+    public Optional<AppUser> findByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+    //Nach Benutzername finden
+    public Optional<AppUser> findByBenutzername(String benutzername){
+        return userRepository.findByBenutzername(benutzername);
     }
 
     //Benutzer löschen
@@ -63,11 +102,39 @@ public class AppUserService {
 
         return userRepository.save(existingAppUser);
     }
-    //Passwort hashing
+    //Authentifikation eines User (Vorbereitung für Login
+    public Optional<AppUser> authenticateUser(String benutzername, String rawPasswort) {
+        //User suchen
+        Optional<AppUser> userOpt = userRepository.findByBenutzername(benutzername);
+
+        if (userOpt.isPresent()) {
+            AppUser appUser = userOpt.get();
+
+            //Password prüfen mit BCrypt
+            if (passwordEncoder.matches(rawPasswort, appUser.getPasswort())) {
+
+                return Optional.of(appUser);
+            }
+        }
+        return Optional.empty();
+    }
+        //Einfache Email-Validation
+        private boolean isValidEmail(String email){
+        if (email == null) return false;
+        Pattern p = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
+            return p.matcher(email).matches();
+        }
+
+        //Prüft ob ein Benutzername verfügbar ist
+        public boolean isBenutzernameAvailable(String benutzername){
+        return benutzername != null && !userRepository.existsByBenutzername(benutzername);
+        }
+
+        //Prüft ob eine Mail verfügbar ist
+        public boolean isEmailAvailable (String email){
+        return email != null && !userRepository.existsByEmail(email);
+        }
 
 
-    
+    }
 
-    
-
-}
