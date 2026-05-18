@@ -7,9 +7,6 @@ import com.expensetracker.backend.entities.AppUser;
 import com.expensetracker.backend.services.AppUserService;
 import com.expensetracker.backend.services.JwtService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
-import org.aspectj.weaver.ast.Test;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +59,7 @@ public class AuthController {
         }
 
     }
-    @PostMapping("login")
+    @PostMapping("/login")
     public ResponseEntity<?> login (@Valid @RequestBody LoginRequestDTO request) {
         try {
             Optional<AppUser> userOpt;
@@ -79,7 +76,8 @@ public class AuthController {
             }
             AppUser user = userOpt.get();
             //2.Passwort prüfen mit authenticateUser
-            Optional<AppUser> authenticatedUser = appUserService.authenticateUser(user.getUsername(),
+            Optional<AppUser> authenticatedUser = appUserService.authenticateUser(
+                    user.getBenutzername(),
                     request.getPasswort());
             if (authenticatedUser.isEmpty()){
                 //passwort falsch
@@ -112,7 +110,7 @@ public class AuthController {
                     .body(Map.of("error", "Ein Fehler ist aufgetreten: " + e.getMessage()));
         }
     }
-    @GetMapping("/check-benutzername/{benutzername]")
+    @GetMapping("/check-benutzername/{benutzername}")
     public ResponseEntity<Map<String, Object>> checkBenutzername(@PathVariable String benutzername) {
 
         boolean available = appUserService.isBenutzernameAvailable(benutzername);

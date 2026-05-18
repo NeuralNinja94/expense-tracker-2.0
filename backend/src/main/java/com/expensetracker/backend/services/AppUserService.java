@@ -76,6 +76,10 @@ public class AppUserService {
         return userRepository.findByBenutzername(benutzername);
     }
 
+    public AppUser createUser(AppUser user) {
+        return  userRepository.save(user);
+    }
+
     //Benutzer löschen
     public void deleteUser(@NonNull Long id) {
         userRepository.deleteById(id);

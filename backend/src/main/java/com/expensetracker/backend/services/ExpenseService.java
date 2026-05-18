@@ -12,9 +12,6 @@ import com.expensetracker.backend.repositories.AppUserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-
-import static java.lang.Long.sum;
 
 
 @Service
