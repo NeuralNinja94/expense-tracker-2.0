@@ -45,15 +45,7 @@ Das Projekt dient als Lern- und Praxisprojekt im Rahmen meiner Ausbildung zum **
 
 ---
 
-## 📁 Projektstruktur
 
-backend/
-    controller/
-    service/
-    repository/
-    entities/
-    config/
-    ExpenseTrackerApplication.java
 
 ### Installation & Setup
 ### Repository klonen
