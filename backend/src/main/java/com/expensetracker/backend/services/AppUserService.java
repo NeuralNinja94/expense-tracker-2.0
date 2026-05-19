@@ -106,7 +106,7 @@ public class AppUserService {
 
         return userRepository.save(existingAppUser);
     }
-    //Authentifikation eines User (Vorbereitung für Login
+    //Authentifikation eines User (Vorbereitung für Login)
     public Optional<AppUser> authenticateUser(String benutzername, String rawPasswort) {
         //User suchen
         Optional<AppUser> userOpt = userRepository.findByBenutzername(benutzername);
@@ -139,6 +139,10 @@ public class AppUserService {
         return email != null && !userRepository.existsByEmail(email);
         }
 
-
+    public boolean checkPassword(AppUser user, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, user.getPasswort());
     }
+
+
+}
 

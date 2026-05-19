@@ -4,14 +4,15 @@ import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequestDTO {
 
-    @NotBlank (message = "Benutzername darf nicht leer sein")
+    @NotBlank (message = "Benutzername oder Email darf nicht leer sein")
     private String benutzernameOrEmail;
+
     @NotBlank (message = "Passwort ist erforderlich")
     private String passwort;
 
     public LoginRequestDTO() {}
 
-    public LoginRequestDTO(String benutzername, String passwort) {
+    public LoginRequestDTO(String benutzernameOrEmail, String passwort) {
         this.benutzernameOrEmail = benutzernameOrEmail;
         this.passwort = passwort;
     }

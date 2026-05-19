@@ -63,6 +63,7 @@ public class AuthController {
     public ResponseEntity<?> login (@Valid @RequestBody LoginRequestDTO request) {
         try {
             Optional<AppUser> userOpt;
+
             if(request.getBenutzernameOrEmail().contains("@")){
                 userOpt = appUserService.findByEmail(request.getBenutzernameOrEmail());
             } else {
@@ -76,11 +77,10 @@ public class AuthController {
             }
             AppUser user = userOpt.get();
             //2.Passwort prüfen mit authenticateUser
-            Optional<AppUser> authenticatedUser = appUserService.authenticateUser(
-                    user.getBenutzername(),
-                    request.getPasswort());
-            if (authenticatedUser.isEmpty()){
-                //passwort falsch
+            //Optional<AppUser> authenticatedUser = appUserService.authenticateUser(
+              //      request.getBenutzernameOrEmail(),
+            //    request
+            if (!appUserService.checkPassword(user, request.getPasswort())){
                 return ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Ungültige Anmeldedaten"));
