@@ -21,11 +21,13 @@ Das Projekt dient als Lern- und Praxisprojekt im Rahmen meiner Ausbildung zum **
 - Saubere Projektstruktur
 - Beispiel-Konfigurationsdatei (`application.properties.example`)
 - `.gitignore` schützt sensible Daten (z. B. echte `application.properties`)
+- Login-Funktion repariert
+- Benutzerverwaltung abgeschlossen (Login / Registrierung
+  
 
 ### In Arbeit / Geplant
-- Login-Funktion reparieren (aktuell fehlerhaft)
 - Testen und Validieren der bestehenden Endpoints
-- Benutzerverwaltung (Login / Registrierung)
+- Protected Routes abschliessen
 - Kategorien für Ausgaben
 - Frontend (React / Vite)
 - Export-Funktion (PDF/CSV)
