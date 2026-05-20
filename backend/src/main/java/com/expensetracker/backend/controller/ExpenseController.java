@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,7 @@ public class ExpenseController {
     }
     //Abrufen aller Ausgaben
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<ExpenseDto> getAllExpenses() {
         return expenseService.getAllExpenses().stream()
                 .map(expenseMapper::toDto)
@@ -40,12 +42,14 @@ public class ExpenseController {
     }
     //Abrufen einer Ausgabe nach Id
     @GetMapping("/{expenseId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ExpenseDto getExpenseById(@PathVariable @NonNull Long expenseId) {
         return expenseMapper.toDto(expenseService.getExpenseById(expenseId));
     }
 
     //Methode zum erstellen einer Ausgabe
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ExpenseDto createExpense(@PathVariable Long userId, @RequestBody @Validated ExpenseDto expenseDto) {
         Expense expense = expenseMapper.toEntity(expenseDto);
         return expenseMapper.toDto(expenseService.createExpense(expense));
@@ -53,12 +57,14 @@ public class ExpenseController {
 
     //Methode zum Aktualisieren einer Ausgabe
     @PutMapping("/{expenseId}")
+    @PreAuthorize("hasRole('USER')")
     public ExpenseDto updateExpense(@PathVariable Long expenseId, @RequestBody @Validated ExpenseDto expenseDto) {
         Expense expense = expenseMapper.toEntity(expenseDto);
         return expenseMapper.toDto(expenseService.updateExpense(expenseId, expense));
     }
     //Methode zum Löschen einer Ausgabe
     @DeleteMapping("/{expenseId}")
+    @PreAuthorize("hasRole('USER')")
     public void deleteExpense(@PathVariable Long expenseId) {
 
         expenseService.deleteExpense(expenseId);
